@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>商品管理</title>
+    <!-- Bootstrap -->
+    <link href="/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/bootstrap/dist/js/vue.js"></script>
+
+    <style>
+        table td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+<!--导航栏-->
+<div class="navbar navbar-inverse " style="margin-bottom: 1px">
+    <!--设置头部信息-->
+    <div class="container-fluid">
+        <div class="navbar-header ">
+            <div class="navbar-brand">
+                <span class="glyphicon glyphicon-fire">GuiGu</span>
+            </div>
+        </div>
+
+        <div class="">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">
+                    <span class="glyphicon glyphicon-tasks"></span>
+                </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="glyphicon glyphicon-bell"></span>
+                        <i class="badge">8</i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="glyphicon glyphicon-envelope"></span>
+                        <i class="badge">8</i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-toggle="dropdown" style="padding: 5px 0px;">
+                        <img src="/bootstrap/dist/images/2019111607065107309879.jpeg" class="img-circle" width="40"/>
+                        <small>Welcom</small>
+                        Admin
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="active">
+                            <a href="#" class="glyphicon glyphicon-cog">&nbsp;Setting</a>
+                        </li>
+                        <li>
+                            <a href="#" class="glyphicon glyphicon-user">&nbsp;Profile</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#" class="glyphicon glyphicon-off">&nbsp;Logout</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="test" class="row">
+    <div class="col-sm-2"
+         style="padding-right: 0;border-right: 1px solid #cccccc;box-shadow: 1px 0 2px rgba(0,0,0,0.3)">
+        <!--搜索框部分-->
+        <div class="search" style="padding: 5px">
+            <div class="input-group">
+                <input class="form-control input-sm" type="text"/>
+                <div class="input-group-btn ">
+                    <a href="#" class="btn btn-warning btn-sm glyphicon glyphicon-search"></a>
+                </div>
+            </div>
+        </div>
+        <!--面板部分-->
+        <div class="panel-group" id="box">
+            <!--产品-->
+            <div class="panel panel-success">
+                <div class="panel-heading ">
+                    <a href="#collapseB" class="panel-title" data-parent="#box" data-toggle="collapse">
+                        客户信息管理
+                        <span class="caret"></span>
+                    </a>
+
+                </div>
+                <div class="panel-collapse collapse" id="collapseB">
+                    <div class="panel-body">
+                        <ul class="nav nav-pills nav-stacked ">
+                            <li>
+                                <a class="" href="#">产品查询</a><br>
+                            </li>
+                            <li>
+                                <a href="#" @click="openModal()" data-toggle="modal"
+                                   data-target="#addUserModal">客户新增</a><br>
+                            </li>
+                            <li>
+                                <a class="" href="#">产品修改</a><br>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-10" style="padding-left: 0">
+        <div class="breadcrumb" style="padding: 0;margin: 0">
+            <ul class="breadcrumb">
+                <li>
+                    <span class="glyphicon glyphicon-home"></span>
+                    <a href="#">&nbsp;Home</a>
+                </li>
+                <li>
+                    <a href="#" class="">Item</a>
+                </li>
+                <li>
+                    Query
+                </li>
+            </ul>
+        </div>
+        <div class="panel panel-success" style="padding: 0;margin: 2px">
+            <div class="panel-heading">
+                <a href="#" class="panel-title">商品管理</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="input-group" style="padding: 0;margin: 0">
+                    <span class="input-group-addon" id="basic-addon2">员工部门:</span>
+                    <select class="form-control" aria-describedby="basic-addon2" v-model="deptid">
+                        <option selected="selected" value="0">-------请选择--------</option>
+                        <option v-for="(obj,index) in objSelection" :value="obj.id">
+                            {{obj.deptname}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="input-group" style="padding: 0;margin: 0">
+                    <span class="input-group-addon" id="basic-addon1">员工姓名:</span>
+                    <input type="text" class="form-control" aria-describedby="basic-addon1" v-model="empname">
+
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="input-group" style="padding: 0;margin: 0">
+                    <span class="input-group-addon" id="basic-addon3">员工电话:</span>
+                    <input type="text" class="form-control" aria-describedby="basic-addon3" v-model="phone">
+                    <div class="input-group-btn ">
+                        <!--                        <a href="#" class="btn btn-warning btn-sm glyphicon glyphicon-search" @click.native="fn"></a>-->
+                        <input type="button" class="btn btn-warning btn-sm" @click="getObjectPage(1)" value="查询">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive" style="overflow:scroll;">
+            <table class="table table-hover table-striped table-bordered table-sm table-condensed"
+                   style="table-layout:fixed;">
+                <thead class="">
+                <tr>
+                    <th>操作</th>
+                    <th>员工编号</th>
+                    <th>员工姓名</th>
+                    <th>员工性别</th>
+                    <th>生日</th>
+                    <th>电话</th>
+                    <th>职务</th>
+                    <th>部门</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(obj,index) in objs">
+                    <td>
+                        <!--                        <a class="btn btn-default btn-sm" :href="'/rest/api/item/'+obj.custId">查询详情</a>-->
+                        <a class="btn btn-default btn-sm" @click="openModal(obj)" data-toggle="modal"
+                           data-target="#addUserModal">修改</a>
+                        <a class="btn btn-default btn-sm" @click="delCus(obj.id)">删除</a>
+                    </td>
+                    <td>{{obj.empnum}}</td>
+                    <td>{{obj.empname}}</td>
+                    <td v-if="obj.gender == 1">
+                        男
+                    </td>
+                    <td v-else>
+                        女
+                    </td>
+
+                    <td>{{obj.birthday}}</td>
+                    <td>{{obj.phone}}</td>
+                    <td>{{obj.duty}}</td>
+                    <td v-if="obj.deptid == s.id" v-for="(s,index) in objSelection">{{s.deptname}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="text-center">
+                <ul class="pagination pagination-lg">
+                    <li>
+                        <a href="#" @click="setPage(0)">首页</a>
+                    </li>
+                    <li>
+                        <a href="#" @click="setPage(page-1)">&laquo;上一页</a>
+                    </li>
+                    <li>
+                        <a href="#" @click="setPage(page+1)">&raquo;下一页</a>
+                    </li>
+                    <li>
+                        <a href="#" @click="setPage(totalPages)">尾页</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="test2">
+    <form method="post" class="form-horizontal" role="form" id="form_data" onsubmit="return check_form()"
+          style="margin: 20px;">
+        <div class="modal fade" data-backdrop="static" id="addUserModal" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            客户信息
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label for="code" class="col-sm-3 control-label">员工编号</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" v-model="empnum" value="" id="code">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="user_name" class="col-sm-3 control-label">员工姓名</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" v-model="empname" value="" id="user_name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="custSource" class="col-sm-3 control-label">员工性别</label>
+                                <div class="col-sm-9">
+                                    <select id="custSource" class="form-control" v-model="gender">
+                                        <option selected="selected" value="0">-------请选择--------</option>
+                                        <option value="1">男</option>
+                                        <option value="2">女</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone" class="col-sm-3 control-label">员工电话</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" v-model="phone" value="" id="phone">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="address" class="col-sm-3 control-label">员工地址</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" v-model="address" value="" id="address">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="duty" class="col-sm-3 control-label">员工职务</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" v-model="duty" value="" id="duty">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="duty" class="col-sm-3 control-label">员工部门:</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control"v-model="deptid">
+                                        <option selected="selected" value="0">-------请选择--------</option>
+                                        <option v-for="(obj,index) in objSelection" :value="obj.id">
+                                            {{obj.deptname}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnclose" class="btn btn-default" data-dismiss="modal">关闭
+                        </button>
+                        <button type="button" @click="addObject" class="btn btn-primary">
+                            提交
+                        </button>
+                        <span id="tip"> </span>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    </form>
+</div>
+</body>
+<script src="/bootstrap/dist/js/jquery.min.js"></script>
+<script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<script>
+    //查询数据vue 模块
+    var vm = new Vue({
+        el: '#test',
+        data: {//数据初始化
+            rows: 10,
+            page: 1,
+            totalPages: 0,
+            empname: "",//员工名称
+            phone: "",//客户信息来源
+            deptid: 0,//客户所属行业
+            objs: [],
+            objSelection: []
+        },
+        methods: {
+            setPage(page) {
+                if (page <= 0) {
+                    page = 1;
+                } else if (page >= vm.totalPages) {
+                    page = vm.totalPages;
+                }
+                vm.page = page;
+                vm.getObjectPage(vm.page)
+            },
+            getObjectPage(p) {
+                $.ajax({
+                    url: "/rest/emp",//请求地址 //TODO 数据表请求地址
+                    data: {
+                        "page": p,
+                        "rows": vm.rows,
+                        "empname": vm.empname,
+                        "phone": vm.phone,
+                        "deptid": vm.deptid,
+                    },//如果不想分页，请把这行注释，其他参数不用管，分页插件会自行无效化
+                    type: "get",
+                    statusCode: {
+                        200: function (data) {
+                            vm.page = p;
+                            vm.objs = [];
+                            vm.objs = data.rows;
+                            if (data.total % vm.rows === 0) {
+                                vm.totalPages = parseInt(data.total / vm.rows);
+                            } else {
+                                vm.totalPages = parseInt(data.total / vm.rows) + 1;
+                            }
+                        }
+                    }
+                })
+            },
+            getSelections() {
+                $.ajax({
+                    url: "/rest/dept",//请求地址//TODO 查询条件请求地址
+                    type: "get",
+
+                    statusCode: {
+                        200: function (data) {
+                            vm.objSelection = data.rows;
+                        }
+                    }
+                })
+            },
+            openModal(obj) {
+                vm2.objSelection = vm.objSelection;
+                vm2.obj = obj;
+                if (vm2.obj !== undefined) {
+                    vm2.empname = obj.empname;
+                    vm2.empnum = obj.empnum;
+                    vm2.gender = obj.gender;//客户信息来源
+                    vm2.birthday = obj.birthday;//客户所属行业
+                    vm2.phone = obj.phone;//客户级别
+                    vm2.address = obj.address;
+                    vm2.duty = obj.duty;
+                    vm2.deptid = obj.deptid;
+                }
+            },
+            delCus(custId) {
+                $.ajax({
+                    url: "/rest/emp",//请求地址   //TODO 修改信息请求地址
+                    type: "POST",
+                    data: {
+                        "id": custId,
+                        "_method": "DELETE"
+                    },
+                    statusCode: {
+                        201: function () {
+                            alert("删除成功");
+                            vm.getObjectPage(vm.page);
+                        },
+                        500: function () {
+                            alert("网络服务不稳定")
+                        },
+                        400: function () {
+                            alert("员工不存在")
+                        }
+                    }
+                })
+            }
+        }
+    })
+
+
+    //新增数据vue 模块
+    var vm2 = new Vue({
+        el: '#test2',
+        data: {//数据初始化
+            empnum: "",
+            empname: "",
+            gender: 0,
+            birthday: "",
+            phone: "",
+            address: "",
+            duty: "",
+            deptid: 0,
+            objSelection: [],
+            obj: []
+        },
+        methods: {
+            addObject() {
+                if (vm2.empnum.trim() === "") {
+                    alert("员工编号不能为空");
+                    return false;
+                } else if (vm2.empname.trim() === "") {
+                    alert("员工姓名不能为空");
+                    return false;
+                } else if (vm2.gender === 0) {
+                    alert("员工性别不能为空");
+                    return false;
+                } else if (vm2.phone.trim() === "") {
+                    alert("员工电话不能为空");
+                    return false;
+                } else if (vm2.address.trim() === "") {
+                    alert("员工住址不能为空");
+                    return false;
+                } else if (vm2.duty.trim() === "") {
+                    alert("员工职务不能为空");
+                    return false;
+                } else if (vm2.deptid  === 0) {
+                    alert("员工部门不能为空");
+                    return false;
+                } else {
+                    if (vm2.obj === undefined) {
+                        //新增请求
+                        $.ajax({
+                            url: "/rest/emp",//请求地址 // TODO 新增请求地址
+                            type: "POST",
+                            data: {
+                                "empnum": vm2.empnum,
+                                "empname": vm2.empname,
+                                "gender": vm2.gender,//客户信息来源
+                                "phone": vm2.phone,//客户级别
+                                "address": vm2.address,
+                                "duty": vm2.duty,
+                                "deptid": vm2.deptid
+                            },
+                            statusCode: {
+                                201: function () {
+                                    alert("添加成功")
+                                    // $("#form_data").$refs['form'].resetField();
+                                    vm2.resetFrom();
+                                    $("#btnclose").click();
+                                    vm.getObjectPage(vm.page);
+                                },
+                                500: function () {
+                                    alert("网络服务不稳定")
+                                }
+                            }
+                        })
+                    } else {
+                        //修改信息
+                        $.ajax({
+                            url: "/rest/emp",//请求地址   //TODO 修改信息请求地址
+                            type: "POST",
+                            data: {
+                                "id": vm2.obj.id,
+                                "empnum": vm2.empnum,
+                                "empname": vm2.empname,
+                                "gender": vm2.gender,//客户信息来源
+                                "phone": vm2.phone,//客户级别
+                                "address": vm2.address,
+                                "duty": vm2.duty,
+                                "deptid": vm2.deptid,
+                                "_method": "PUT"
+                            },
+                            statusCode: {
+                                201: function () {
+                                    alert("修改成功");
+                                    vm2.resetFrom();
+                                    $("#btnclose").click();
+                                    vm.getObjectPage(vm.page);
+                                },
+                                500: function () {
+                                    alert("网络服务不稳定")
+                                }
+                            }
+                        })
+                    }
+                    // "/rest/customer";
+
+                }
+            },
+            resetFrom() {
+                //重置初始化数据
+                vm2.empname = "";
+                vm2.empnum = "";
+                vm2.gender = 0;//客户信息来源
+                vm2.phone = "";
+                vm2.address = "";
+                vm2.duty = "";
+                vm2.deptid = 0;//客户级别
+                vm2.objSelection = [];
+                vm2.obj = [];
+            }
+        }
+    })
+
+    $(document).ready(function () {
+        //初始化，第一次请求访问数据
+        vm.getObjectPage(1); //分页数据初始化
+        vm.getSelections();  //查询条件列表数据初始化
+
+
+        $("#addUserModal").on('hide.bs.modal', function () {
+            vm2.resetFrom();//新增 和 修改的模态框关闭后重置初始化数据
+        })
+
+    });
+
+</script>
+</html>
