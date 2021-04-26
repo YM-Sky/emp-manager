@@ -22,7 +22,7 @@
         <!--    junit    -->
         <junit.version>4.12</junit.version>
         <fastjson.version>1.2.61</fastjson.version>
-        <commons-io.version>2.6</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <!--    spring版本可以改这里-->
         <spring.version>5.1.8.RELEASE</spring.version>
         <!-- spring版本低于4.0的log4j版本改这里  这个是解析log4j.properties -->
